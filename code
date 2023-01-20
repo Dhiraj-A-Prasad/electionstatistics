@@ -1,0 +1,82 @@
+package com.collin.election;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
+public class ElectionStats
+{
+    private static int winningVotes = 0;
+    private static int totalVotes = 0;
+
+    private static Map<String,Integer> headers = new HashMap<>();
+
+    private static int line = 0;
+
+    public static void main(String... args) throws FileNotFoundException, InterruptedException
+    {
+        File inputFile = new File("results14utf8.csv");
+        Scanner scanner = new Scanner(inputFile);
+
+        scanner.nextLine();
+
+        while(scanner.hasNextLine())
+        {
+            List<String> splitLine = splitLineWithQuotes(scanner.nextLine());
+            if(splitLine.get(4) != null && !splitLine.get(4).equals("n/a"))
+            {
+                if(splitLine.get(15) != null && !splitLine.get(15).isEmpty())
+                {
+                    try
+                    {
+                        int score = Integer.parseInt(splitLine.get(15).replaceAll("\\,", ""));
+                        totalVotes += score;
+                        if (splitLine.get(21) != null && !splitLine.get(21).isEmpty())
+                        {
+                            winningVotes += score;
+                        }
+                    }
+                    catch(NumberFormatException e)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        System.out.println("Total Votes: " + totalVotes);
+        System.out.println("Winning Votes: " + winningVotes);
+    }
+
+    private static List<String> splitLineWithQuotes(String line)
+    {
+        List<String> result = new ArrayList<>(23);
+        StringBuilder builder = new StringBuilder();
+        boolean inQuote = false;
+        for(char c : line.toCharArray())
+        {
+            if(c == '"')
+            {
+                inQuote = !inQuote;
+            }
+            else
+            {
+                if (c == ',')
+                {
+                    if (inQuote)
+                    {
+                        builder.append(c);
+                    } else
+                    {
+                        result.add(builder.toString());
+                        builder = new StringBuilder();
+                    }
+                } else
+                {
+                    builder.append(c);
+                }
+            }
+        }
+        return result;
+    }
+}
