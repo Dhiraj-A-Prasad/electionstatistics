@@ -1,5 +1,3 @@
-package com.collin.election;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -15,8 +13,8 @@ public class ElectionStats
 
     public static void main(String... args) throws FileNotFoundException, InterruptedException
     {
-        File inputFile = new File("results14utf8.csv");
-        Scanner scanner = new Scanner(inputFile);
+       System.out,println("Enter the candidate name");
+        Scanner scanner = new Scanner(System.in);
 
         scanner.nextLine();
 
