@@ -1,80 +1,34 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Scanner;
 
-public class ElectionStats
+public class Main
 {
-    private static int winningVotes = 0;
-    private static int totalVotes = 0;
+    public static void main(String [] args){
+        Scanner userInput = new Scanner(System.in);
+        final int SIZE = 2;
+        int[] votes = new int[SIZE];
+        String[] names = new String[SIZE];
 
-    private static Map<String,Integer> headers = new HashMap<>();
-
-    private static int line = 0;
-
-    public static void main(String... args) throws FileNotFoundException, InterruptedException
-    {
-       System.out,println("Enter the candidate name");
-        Scanner scanner = new Scanner(System.in);
-
-        scanner.nextLine();
-
-        while(scanner.hasNextLine())
-        {
-            List<String> splitLine = splitLineWithQuotes(scanner.nextLine());
-            if(splitLine.get(4) != null && !splitLine.get(4).equals("n/a"))
-            {
-                if(splitLine.get(15) != null && !splitLine.get(15).isEmpty())
-                {
-                    try
-                    {
-                        int score = Integer.parseInt(splitLine.get(15).replaceAll("\\,", ""));
-                        totalVotes += score;
-                        if (splitLine.get(21) != null && !splitLine.get(21).isEmpty())
-                        {
-                            winningVotes += score;
-                        }
-                    }
-                    catch(NumberFormatException e)
-                    {
-
-                    }
-                }
-            }
+        for (int i = 0; i < names.length && i < votes.length; i++){
+            System.out.print("Enter candidate's name: ");
+            names[i] = userInput.next( );
+            System.out.print("Enter number of votes: ");
+            votes[i] = userInput.nextInt( );
         }
 
-        System.out.println("Total Votes: " + totalVotes);
-        System.out.println("Winning Votes: " + winningVotes);
+        System.out.println("And the Winner is: " + highest(votes,names));
     }
 
-    private static List<String> splitLineWithQuotes(String line)
-    {
-        List<String> result = new ArrayList<>(23);
-        StringBuilder builder = new StringBuilder();
-        boolean inQuote = false;
-        for(char c : line.toCharArray())
-        {
-            if(c == '"')
-            {
-                inQuote = !inQuote;
-            }
-            else
-            {
-                if (c == ',')
-                {
-                    if (inQuote)
-                    {
-                        builder.append(c);
-                    } else
-                    {
-                        result.add(builder.toString());
-                        builder = new StringBuilder();
-                    }
-                } else
-                {
-                    builder.append(c);
-                }
-            }
+
+    public static String highest(int[] votes,String names[]){
+    int high = votes[1];
+    String s= names[0];
+    for (int i = 1; i < votes.length; i++){
+        if (votes[i] > high){
+            high = votes[i];
+            s=names[i];
         }
-        return result;
     }
+    s=s+""+high;
+    return s;
+}
 }
